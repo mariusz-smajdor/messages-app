@@ -1,13 +1,15 @@
 import { Fragment, useState } from 'react';
 
+const initalMsgState = {
+  sender: '',
+  recipient: '',
+  title: '',
+  message: '',
+};
+
 function App() {
   const [isSender, setIsSender] = useState(false);
-  const [msgInfo, setMsgInfo] = useState({
-    sender: '',
-    recipient: '',
-    title: '',
-    message: '',
-  });
+  const [msgInfo, setMsgInfo] = useState(initalMsgState);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -27,6 +29,11 @@ function App() {
     }
   }
 
+  function changeSender() {
+    setIsSender(false);
+    setMsgInfo(initalMsgState);
+  }
+
   return (
     <form className=' container-sm mt-5 bg-light rounded shadow px-3 py-5'>
       {!isSender ? (
@@ -43,7 +50,12 @@ function App() {
           </button>
         </Fragment>
       ) : (
-        <h2>{msgInfo.sender}, send a message.</h2>
+        <div className='d-flex justify-content-between'>
+          <h2>{msgInfo.sender}, send a message.</h2>
+          <button className='btn btn-dark' onClick={changeSender}>
+            Change User
+          </button>
+        </div>
       )}
       {isSender && (
         <Fragment>
@@ -53,12 +65,14 @@ function App() {
             placeholder='Recipient'
             type='text-area'
             onChange={handleChange}
+            required
           />
           <input
             name='title'
             className='form-control mt-3'
             placeholder='Title'
             onChange={handleChange}
+            required
           />
           <textarea
             name='message'
@@ -66,6 +80,7 @@ function App() {
             placeholder='Message'
             onChange={handleChange}
             rows='10'
+            required
           />
           <button className='btn btn-primary mt-3 w-100'>Send Message</button>
         </Fragment>
