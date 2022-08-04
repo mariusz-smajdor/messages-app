@@ -1,4 +1,5 @@
 import { Fragment, useState } from 'react';
+import axios from 'axios';
 
 const initalMsgState = {
   sender: '',
@@ -10,6 +11,7 @@ const initalMsgState = {
 function App() {
   const [isSender, setIsSender] = useState(false);
   const [msgInfo, setMsgInfo] = useState(initalMsgState);
+  const [info, setInfo] = useState('');
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -34,8 +36,21 @@ function App() {
     setMsgInfo(initalMsgState);
   }
 
+  async function sendMessage(e) {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post('http://localhost:3001/message', {
+        msgInfo,
+      });
+      setInfo(res.data);
+    } catch (err) {
+      setInfo(err);
+    }
+  }
+
   return (
-    <form className=' container-sm mt-5 bg-light rounded shadow px-3 py-5'>
+    <form className='container-sm mt-5 bg-light rounded shadow px-3 py-5'>
       {!isSender ? (
         <Fragment>
           <h2>Your Username</h2>
@@ -82,9 +97,12 @@ function App() {
             rows='10'
             required
           />
-          <button className='btn btn-primary mt-3 w-100'>Send Message</button>
+          <button className='btn btn-primary mt-3 w-100' onClick={sendMessage}>
+            Send Message
+          </button>
         </Fragment>
       )}
+      <p>{info}</p>
     </form>
   );
 }
