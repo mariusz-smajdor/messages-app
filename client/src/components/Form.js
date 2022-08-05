@@ -1,7 +1,10 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import Select from 'react-select';
+import io from 'socket.io-client';
 
 import { INITIAL_MSG_STATE } from '../initialMsgState';
+
+const socket = io.connect('http://localhost:3001');
 
 function Form({
   fetchMessages,
@@ -13,6 +16,28 @@ function Form({
   sendMessage,
   messages,
 }) {
+  useEffect(() => {
+    socket.on('message', () => {
+      fetchMessages();
+    });
+  }, []);
+
+  function handleSelect(selectedOption) {
+    setMsgInfo(prev => {
+      return {
+        ...prev,
+        recipient: selectedOption.label,
+      };
+    });
+  }
+
+  function sendMessageHandler(e) {
+    e.preventDefault();
+
+    sendMessage();
+    socket.emit('message', { fetchMessages: 'asd' });
+  }
+
   function handleChange(e) {
     const { name, value } = e.target;
 
@@ -59,13 +84,14 @@ function Form({
           </button>
         </div>
       )}
-      {messages && (
+      {messages && isSender && (
         <Fragment>
           <Select
             options={messages
               .map(msg => msg.sender)
               .filter((msg, i, ar) => ar.indexOf(msg) === i)
               .map(msg => ({ label: msg }))}
+            onChange={handleSelect}
             placeholder='Recipient'
             required
           />
@@ -84,7 +110,10 @@ function Form({
             rows='10'
             required
           />
-          <button className='btn btn-primary mt-3 w-100' onClick={sendMessage}>
+          <button
+            className='btn btn-primary mt-3 w-100'
+            onClick={sendMessageHandler}
+          >
             Send Message
           </button>
           <p>{statusInfo}</p>

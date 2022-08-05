@@ -9,9 +9,7 @@ export function useMessages() {
   const [messages, setMessages] = useState(null);
   const [isSender, setIsSender] = useState(false);
 
-  async function sendMessage(e) {
-    e.preventDefault();
-
+  async function sendMessage() {
     try {
       const res = await axios.post('http://localhost:3001/message', {
         msgInfo,
