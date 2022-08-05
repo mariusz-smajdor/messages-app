@@ -52,7 +52,7 @@ function Form({
           </button>
         </Fragment>
       ) : (
-        <div className='d-flex justify-content-between'>
+        <div className='d-flex justify-content-between mb-3'>
           <h2>{msgInfo.sender}, send a message.</h2>
           <button className='btn btn-dark' onClick={changeSender}>
             Change User
