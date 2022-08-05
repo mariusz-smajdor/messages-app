@@ -18,8 +18,8 @@ app.post('/message', (req, res) => {
   const { sender, recipient, title, message } = req.body.msgInfo;
 
   db.query(
-    'INSERT INTO messages (sender, recipient, title, message) VALUES (?, ?, ?, ?)' /
-      [sender, recipient, title, message],
+    'INSERT INTO messages (sender, recipient, title, message) VALUES (?, ?, ?, ?)',
+    [sender, recipient, title, message],
     err => {
       if (err) {
         res.send('Something went wrong.');
@@ -28,6 +28,16 @@ app.post('/message', (req, res) => {
       }
     }
   );
+});
+
+app.get('/message', (_, res) => {
+  db.query('SELECT * FROM messages', (err, data) => {
+    if (err) {
+      res.send('Failed to fetch messages.');
+    } else {
+      res.send(data);
+    }
+  });
 });
 
 app.listen(process.env.PORT || 3001);
