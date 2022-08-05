@@ -26,6 +26,7 @@ function App() {
         isSender={isSender}
         statusInfo={statusInfo}
         msgInfo={msgInfo}
+        messages={messages}
       />
       {isSender && (
         <Messages

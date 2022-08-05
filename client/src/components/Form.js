@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import Select from 'react-select';
 
 import { INITIAL_MSG_STATE } from '../initialMsgState';
 
@@ -10,6 +11,7 @@ function Form({
   isSender,
   statusInfo,
   sendMessage,
+  messages,
 }) {
   function handleChange(e) {
     const { name, value } = e.target;
@@ -57,13 +59,14 @@ function Form({
           </button>
         </div>
       )}
-      {isSender && (
+      {messages && (
         <Fragment>
-          <input
-            name='recipient'
-            className='form-control mt-3'
+          <Select
+            options={messages
+              .map(msg => msg.sender)
+              .filter((msg, i, ar) => ar.indexOf(msg) === i)
+              .map(msg => ({ label: msg }))}
             placeholder='Recipient'
-            onChange={handleChange}
             required
           />
           <input
